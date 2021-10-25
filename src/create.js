@@ -18,6 +18,17 @@ const MetalSmith = require('metalsmith');
 let { render } = require('consolidate').ejs;
 render = promisify(render)
 
+// 获取分支
+const getTag = async ()=>{
+  const result = await Inquirer.prompt({
+    type: "list",
+    choices: ["vue-h5-project"],
+    name: "choice project template",
+    message: "选择你的项目模板?",
+  })
+  return result
+}
+
 const download = async (repo,tag) => {
   let api = `bobetax-byte/bobetax-cli-templates`; // 下载项目
   if (tag) {
@@ -41,9 +52,10 @@ module.exports = async (projectName) => {
       message: "there has a same name directory, Do yuo want to overwrite it?",
     })
     if(result.overwrite === 'no') return
-  }
+  };
+  const tag = getTag();
 
-  const target = await downFetchLoading(download, 'loading template...')('vue-h5-project', 'vue-h5-project')
+  const target = await downFetchLoading(download, 'loading template...')(tag)
   const projectPath = path.join(path.resolve(), projectName)
   
   // 没有 question 文件，不需要编译，直接执行
