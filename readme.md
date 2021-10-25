@@ -21,4 +21,22 @@
 ├── tree.js
 └── yalc.lock
 ```
+### 启动
+  * use yarn
+```
+  yarn add @bobetax/cli -g
+```
+  * use npm
+```
+  npm install @bobetax/cli -g
+```
+  * use pnpm
+```
+  pnpm install @boetax/cli -g  
+```
 
+
+### 使用
+```
+bobetax-cli create "project-name"
+```
