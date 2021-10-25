@@ -1,6 +1,6 @@
 {
   "name": "@bobetax/cli",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "a cli for @bobetax",
   "main": "index.js",
   "scripts": {
