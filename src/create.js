@@ -54,6 +54,8 @@ module.exports = async (projectName) => {
     if(result.overwrite === 'no') return
   };
   const tag = getTag();
+  
+  log(`tag->${tag}`)
 
   const target = await downFetchLoading(download, 'loading template...')(tag)
   const projectPath = path.join(path.resolve(), projectName)
