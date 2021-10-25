@@ -49,6 +49,7 @@ module.exports = async (projectName) => {
   // 没有 question 文件，不需要编译，直接执行
   if (!fs.existsSync(path.join(target, 'question.js'))) {
     const spinner = ora('Loading templates').start();
+    // copy files
     await ncp(target, projectPath);
     spinner.succeed()
   } else {
