@@ -23,10 +23,10 @@ const getTag = async ()=>{
   const result = await Inquirer.prompt({
     type: "list",
     choices: ["vue-h5-project"],
-    name: "choice project template",
+    name: "tagName",
     message: "选择你的项目模板?",
   })
-  return result
+  return result.tagName
 }
 
 const download = async (repo,tag) => {
