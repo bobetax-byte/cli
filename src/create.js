@@ -4,7 +4,7 @@ const fs = require('fs');
 const Inquirer = require('inquirer')
 const shell = require('shelljs');
 const downLoadGit = require('download-git-repo');
-let ncp = require('ncp'); 
+let ncp = require('ncp');
 
 // 初始化 下载
 const { downLoadDir } = require('./download');
@@ -19,25 +19,28 @@ let { render } = require('consolidate').ejs;
 render = promisify(render)
 
 // 获取分支
-const getTag = async ()=>{
+const getTag = async () => {
   const result = await Inquirer.prompt({
     type: "list",
-    choices: ["vue-h5-project"],
+    choices: ["vue-h5-project", "vue-ts"],
     name: "tagName",
     message: "选择你的项目模板?",
   })
   return result.tagName
 }
 
-const download = async (repo,tag) => {
+const download = async (repo, tag) => {
   let api = `bobetax-byte/bobetax-cli-templates`; // 下载项目
-  if (tag) {
-    api += `#${tag}`;
+  if (repo) {
+    api += `#${repo}`
   }
+  // if (tag) {
+  //   api += `#${tag}`;
+  // }
   const dest = `${downLoadDir}/${repo}`; // 将模板下载到对应的目录中
   // 首先判断，对应的目录下是否存在对应的目录,并且判断对应的版本是否需要更新
   // if (!ifPathExit(repo, downLoadDir)) {
-    await downLoadGitFunc(api, dest);
+  await downLoadGitFunc(api, dest);
   // }
   return dest; // 返回下载目录
 }
@@ -51,15 +54,13 @@ module.exports = async (projectName) => {
       name: "overwrite",
       message: "there has a same name directory, Do yuo want to overwrite it?",
     })
-    if(result.overwrite === 'no') return
+    if (result.overwrite === 'no') return
   };
-  const tag = getTag();
-  
-  log(`tag->${tag}`)
+  const tag = await getTag();
 
   const target = await downFetchLoading(download, 'loading template...')(tag)
   const projectPath = path.join(path.resolve(), projectName)
-  
+
   // 没有 question 文件，不需要编译，直接执行
   if (!fs.existsSync(path.join(target, 'question.js'))) {
     const spinner = ora('Loading templates').start();
@@ -94,7 +95,7 @@ module.exports = async (projectName) => {
           })
           done();
         })
-        .build(async() => {
+        .build(async () => {
           // 选取当前环境执行变量，yarn,npm ,cnpm,
           const choices = getPackageMangerList()
           // 如果当前用户环境没有对应的包管理器，那么跳过。
@@ -121,7 +122,7 @@ module.exports = async (projectName) => {
           // 进入到当前的环境命令
           shell.cd(projectName)
           shell.exec('pwd')
-          shell.exec(scriptOrder[packageName], function(code, stdout, stderr) {
+          shell.exec(scriptOrder[packageName], function (code, stdout, stderr) {
             shell.echo('Exit code:', code);
             shell.echo('Program output:', stdout);
             shell.echo('Program stderr:', stderr);
@@ -134,6 +135,6 @@ module.exports = async (projectName) => {
           spinner.succeed()
           shell.exit(1)
         })
-    }) 
+    })
   }
 };
